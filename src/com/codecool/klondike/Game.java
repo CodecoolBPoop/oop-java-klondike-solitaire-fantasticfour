@@ -189,30 +189,49 @@ public class Game extends Pane {
                 tableauPiles.get(0).addCard(card);
                 addMouseEventHandlers(card);
                 getChildren().add(card);
+                card.flip();
             } else if(i<3){
                 tableauPiles.get(1).addCard(card);
                 addMouseEventHandlers(card);
                 getChildren().add(card);
+                if(i==2){
+                    card.flip();
+                }
             } else if(i<6){
                 tableauPiles.get(2).addCard(card);
                 addMouseEventHandlers(card);
                 getChildren().add(card);
+                if(i==5){
+                    card.flip();
+                }
             } else if(i<10){
                 tableauPiles.get(3).addCard(card);
                 addMouseEventHandlers(card);
                 getChildren().add(card);
+                if(i==9){
+                    card.flip();
+                }
             } else if(i<15){
                 tableauPiles.get(4).addCard(card);
                 addMouseEventHandlers(card);
                 getChildren().add(card);
+                if(i==14){
+                    card.flip();
+                }
             } else if(i<21){
                 tableauPiles.get(5).addCard(card);
                 addMouseEventHandlers(card);
                 getChildren().add(card);
+                if(i==20){
+                    card.flip();
+                }
             } else if(i<28){
                 tableauPiles.get(6).addCard(card);
                 addMouseEventHandlers(card);
                 getChildren().add(card);
+                if(i==27){
+                    card.flip();
+                }
             } else{
                 stockPile.addCard(card);
                 addMouseEventHandlers(card);
