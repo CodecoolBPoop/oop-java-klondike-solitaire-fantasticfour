@@ -181,13 +181,53 @@ public class Game extends Pane {
     }
 
     public void dealCards() {
-        Iterator<Card> deckIterator = deck.iterator();
+        //Iterator<Card> deckIterator = deck.iterator();
         //TODO
+        for (int i = 0; i < deck.size(); i++) {
+            Card card = deck.get(i);
+            if(i == 0){
+                tableauPiles.get(0).addCard(card);
+                addMouseEventHandlers(card);
+                getChildren().add(card);
+            } else if(i<3){
+                tableauPiles.get(1).addCard(card);
+                addMouseEventHandlers(card);
+                getChildren().add(card);
+            } else if(i<6){
+                tableauPiles.get(2).addCard(card);
+                addMouseEventHandlers(card);
+                getChildren().add(card);
+            } else if(i<10){
+                tableauPiles.get(3).addCard(card);
+                addMouseEventHandlers(card);
+                getChildren().add(card);
+            } else if(i<15){
+                tableauPiles.get(4).addCard(card);
+                addMouseEventHandlers(card);
+                getChildren().add(card);
+            } else if(i<21){
+                tableauPiles.get(5).addCard(card);
+                addMouseEventHandlers(card);
+                getChildren().add(card);
+            } else if(i<28){
+                tableauPiles.get(6).addCard(card);
+                addMouseEventHandlers(card);
+                getChildren().add(card);
+            } else{
+                stockPile.addCard(card);
+                addMouseEventHandlers(card);
+                getChildren().add(card);
+            }
+        }
+        /** ASK THE MENTORS TOMORROW
+         * int iterationNumber = 0;
         deckIterator.forEachRemaining(card -> {
             stockPile.addCard(card);
             addMouseEventHandlers(card);
             getChildren().add(card);
+            iterationNumber++;
         });
+         */
 
     }
 
