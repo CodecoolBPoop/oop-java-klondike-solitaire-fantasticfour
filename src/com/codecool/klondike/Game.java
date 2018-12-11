@@ -3,6 +3,7 @@ package com.codecool.klondike;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
+import javafx.print.Collation;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -108,7 +109,12 @@ public class Game extends Pane {
 
     public void refillStockFromDiscard() {
         //TODO
-        System.out.println("Stock refilled from discard pile.");
+        List<Card> cards = new ArrayList<>(discardPile.getCards());
+        Collections.reverse(cards);
+        for (Card card: cards) {
+            card.flip();
+            card.moveToPile(stockPile);
+        }
     }
 
     public boolean isMoveValid(Card card, Pile destPile) {
