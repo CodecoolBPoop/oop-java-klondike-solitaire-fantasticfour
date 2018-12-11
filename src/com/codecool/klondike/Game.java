@@ -121,20 +121,15 @@ public class Game extends Pane {
         boolean isValidMove = false;
         System.out.println("checking valid move");
 
-        if (destPile.getPileType().equals(Pile.PileType.FOUNDATION)) {
-            if (card.getRank() == 1 && destPile.isEmpty()) {
-                isValidMove = true;
-            } else if ((card.getRank() - 1) == destPile.getTopCard().getRank() && card.getSuit() == destPile.getTopCard().getSuit()) {
-                isValidMove = true;
-            }
-        }
 
         if (card.getRank() == (destPile.getTopCard().getRank()-1) ){
             if (Card.isOppositeColor(card, destPile.getTopCard())){
                 isValidMove = true;
                 if(!card.getContainingPile().isEmpty()&&!card.getContainingPile().getPileType().equals(Pile.PileType.DISCARD)){
-                    if ((card.getContainingPile().getCards().get(card.getContainingPile().getCards().size() - 2).isFaceDown())) {
-                        card.getContainingPile().getCards().get(card.getContainingPile().getCards().size() - 2).flip();
+                    if ((card.getContainingPile().getCards().get(card.getContainingPile().getCards().size() - 1).isFaceDown())) {
+                        if(card.getContainingPile().getCards().size() !=1){
+                            card.getContainingPile().getCards().get(card.getContainingPile().getCards().size() - 2).flip();
+                        }
                     }
                 }
             }
