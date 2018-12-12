@@ -44,6 +44,9 @@ public class Game extends Pane {
             card.setMouseTransparent(false);
             System.out.println("Placed " + card + " to the waste.");
         }
+        if(e.getClickCount() == 2){
+            moveCardToFoundation(card);
+        }
     };
 
     private EventHandler<MouseEvent> stockReverseCardsHandler = e -> {
@@ -119,7 +122,6 @@ public class Game extends Pane {
 
     public boolean isMoveValid(Card card, Pile destPile) {
         boolean isValidMove = false;
-        int previousCard = card.getContainingPile().getCards().size()-2;
         if(destPile.getCards().size() != 0){
             if (card.getRank() == (destPile.getTopCard().getRank()-1) ){
                 if (Card.isOppositeColor(card, destPile.getTopCard())){
@@ -130,12 +132,18 @@ public class Game extends Pane {
             isValidMove = true;
         }
         if (isValidMove) {
-            if(!card.getContainingPile().isEmpty() && !card.getContainingPile().getPileType().equals(Pile.PileType.DISCARD) && previousCard > -1){
-                card.getContainingPile().getCards().get(previousCard).flip();
+            flipCard(card);
             }
-        }
         return isValidMove;
     }
+
+    public void flipCard(Card card) {
+        int previousCard = card.getContainingPile().getCards().size() - 2;
+        if (!card.getContainingPile().isEmpty() && !card.getContainingPile().getPileType().equals(Pile.PileType.DISCARD) && previousCard > -1) {
+            card.getContainingPile().getCards().get(previousCard).flip();
+        }
+    }
+
     private Pile getValidIntersectingPile(Card card, List<Pile> piles) {
         Pile result = card.getContainingPile();
         for (Pile pile : piles) {
@@ -261,7 +269,7 @@ public class Game extends Pane {
                 getChildren().add(card);
             }
         }
-        /** ASK THE MENTORS TOMORROW
+        /* ASK THE MENTORS TOMORROW
          * int iterationNumber = 0;
         deckIterator.forEachRemaining(card -> {
             stockPile.addCard(card);
@@ -279,4 +287,18 @@ public class Game extends Pane {
                 BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
     }
 
+    public void moveCardToFoundation(Card card) {
+        int rank = card.getRank();
+        int suit = card.getSuit();
+        int topCardRank;
+        try {
+            topCardRank = foundationPiles.get(suit-1).getTopCard().getRank();
+        } catch (NullPointerException e) {
+            topCardRank = 0;
+        }
+        if (topCardRank+1 == rank) {
+            flipCard(card);
+            card.moveToPile(foundationPiles.get(suit-1));
+        }
+    }
 }
