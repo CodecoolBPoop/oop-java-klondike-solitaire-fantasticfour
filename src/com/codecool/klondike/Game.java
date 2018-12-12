@@ -58,20 +58,24 @@ public class Game extends Pane {
     private EventHandler<MouseEvent> onMouseDraggedHandler = e -> {
         Card card = (Card) e.getSource();
         Pile activePile = card.getContainingPile();
-        if (activePile.getPileType() == Pile.PileType.STOCK)
+        if (activePile.getPileType() == Pile.PileType.STOCK || card.isFaceDown())
             return;
         double offsetX = e.getSceneX() - dragStartX;
         double offsetY = e.getSceneY() - dragStartY;
 
         draggedCards.clear();
+        int idx = activePile.getCards().size()-1;
         for (int i = 0; i < activePile.getCards().size(); i++) {
+            if (card.equals(activePile.getCards().get(i)))
+                idx = i;
+        }
+
+        for (int i = idx; i < activePile.getCards().size(); i++) {
             if(i<activePile.getCards().size()-1 && !activePile.getPileType().equals(Pile.PileType.DISCARD)){
-                if(!activePile.getCards().get(i).isFaceDown()){
-                    Card card1 = activePile.getCards().get(i);
-                    Card card2 = activePile.getCards().get(i+1);
-                    if(Card.isOppositeColor(card1,card2)&&Card.rankCheck(card1,card2)){
-                        draggedCards.add(card1);
-                    }
+                Card card1 = activePile.getCards().get(i);
+                Card card2 = activePile.getCards().get(i+1);
+                if(Card.isOppositeColor(card1,card2)&&Card.rankCheck(card1,card2)){
+                    draggedCards.add(card1);
                 }
             } else if(!activePile.getPileType().equals(Pile.PileType.DISCARD)){
                 draggedCards.add(activePile.getCards().get(i));
