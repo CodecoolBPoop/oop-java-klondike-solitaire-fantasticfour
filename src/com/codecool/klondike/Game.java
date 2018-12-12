@@ -122,7 +122,7 @@ public class Game extends Pane {
         if (card.getRank() == (destPile.getTopCard().getRank()-1) ){
             if (Card.isOppositeColor(card, destPile.getTopCard())){
                 isValidMove = true;
-                if(!card.getContainingPile().isEmpty()&&!card.getContainingPile().getPileType().equals(Pile.PileType.DISCARD)){
+                if(!card.getContainingPile().isEmpty() && !card.getContainingPile().getPileType().equals(Pile.PileType.DISCARD) && card.getContainingPile().getCards().size()-2 > -1){
                     card.getContainingPile().getCards().get(card.getContainingPile().getCards().size()-2).flip();
                 }
             }
