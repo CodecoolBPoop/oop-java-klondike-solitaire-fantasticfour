@@ -1,18 +1,17 @@
 package com.codecool.klondike;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.print.Collation;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
+import javafx.scene.control.Button;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,6 +33,8 @@ public class Game extends Pane {
     private static double STOCK_GAP = 1;
     private static double FOUNDATION_GAP = 0;
     private static double TABLEAU_GAP = 30;
+
+
 
 
     private EventHandler<MouseEvent> onMouseClickedHandler = e -> {
@@ -267,7 +268,7 @@ public class Game extends Pane {
                 if(i==27){
                     card.flip();
                 }
-            } else{
+            } else {
                 stockPile.addCard(card);
                 addMouseEventHandlers(card);
                 getChildren().add(card);
@@ -304,5 +305,35 @@ public class Game extends Pane {
             flipCard(card);
             card.moveToPile(foundationPiles.get(suit-1));
         }
+    }
+
+    public void addRestartButton() {
+        Button restartButton = new Button("restart");
+        HBox buttonBar = new HBox();
+        restartButton.setOnAction(actionEvent -> restartGame());
+        buttonBar.getChildren().add(restartButton);
+        getChildren().add(buttonBar);
+
+    }
+
+    private void restartGame() {
+        for (Card card: deck) {
+            getChildren().remove(card);
+        }
+        resetPiles();
+        deck.clear();
+        deck = Card.createNewDeck();
+        dealCards();
+    }
+
+    private void resetPiles () {
+        for (Pile pile: tableauPiles) {
+            pile.clear();
+        }
+        for (Pile pile: foundationPiles) {
+            pile.clear();
+        }
+        discardPile.clear();
+        stockPile.clear();
     }
 }
