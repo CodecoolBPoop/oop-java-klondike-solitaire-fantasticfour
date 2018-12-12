@@ -296,7 +296,7 @@ public class Game extends Pane {
         } catch (NullPointerException e) {
             topCardRank = 0;
         }
-        if (topCardRank+1 == rank) {
+        if (topCardRank+1 == rank && !card.isFaceDown()) {
             flipCard(card);
             card.moveToPile(foundationPiles.get(suit-1));
         }
