@@ -93,9 +93,17 @@ public class Game extends Pane {
     };
 
     public boolean isGameWon() {
-        //TODO
-        return false;
+        boolean gameWon = false;
+        for (int i = 0; i < foundationPiles.size(); i++) {
+            for (int j = 0; j < i; j++) {
+                if (j == 13){
+                    gameWon = true;
+                }
+            }
+        }
+        return gameWon;
     }
+
 
     public Game() {
         deck = Card.createNewDeck();
