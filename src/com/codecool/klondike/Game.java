@@ -38,14 +38,15 @@ public class Game extends Pane {
 
     private EventHandler<MouseEvent> onMouseClickedHandler = e -> {
         Card card = (Card) e.getSource();
+        if(e.getClickCount() == 2){
+            moveCardToFoundation(card);
+            return;
+        }
         if (card.getContainingPile().getPileType() == Pile.PileType.STOCK) {
             card.moveToPile(discardPile);
             card.flip();
             card.setMouseTransparent(false);
             System.out.println("Placed " + card + " to the waste.");
-        }
-        if(e.getClickCount() == 2){
-            moveCardToFoundation(card);
         }
     };
 
@@ -59,6 +60,9 @@ public class Game extends Pane {
     };
 
     private EventHandler<MouseEvent> onMouseDraggedHandler = e -> {
+        if(e.getClickCount() == 2) {
+            return;
+        }
         Card card = (Card) e.getSource();
         Pile activePile = card.getContainingPile();
         if (activePile.getPileType() == Pile.PileType.STOCK || activePile.getPileType() == Pile.PileType.FOUNDATION)
