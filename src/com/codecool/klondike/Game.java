@@ -64,15 +64,31 @@ public class Game extends Pane {
         double offsetY = e.getSceneY() - dragStartY;
 
         draggedCards.clear();
-        draggedCards.add(card);
+        for (int i = 0; i < activePile.getCards().size(); i++) {
+            if(i<activePile.getCards().size()-1 && !activePile.getPileType().equals(Pile.PileType.DISCARD)){
+                if(!activePile.getCards().get(i).isFaceDown()){
+                    Card card1 = activePile.getCards().get(i);
+                    Card card2 = activePile.getCards().get(i+1);
+                    if(Card.isOppositeColor(card1,card2)&&Card.rankCheck(card1,card2)){
+                        draggedCards.add(card1);
+                    }
+                }
+            } else if(!activePile.getPileType().equals(Pile.PileType.DISCARD)){
+                draggedCards.add(activePile.getCards().get(i));
+            } else{
+                draggedCards.add(card);
+            }
+        }
 
-        card.getDropShadow().setRadius(20);
-        card.getDropShadow().setOffsetX(10);
-        card.getDropShadow().setOffsetY(10);
+        for (Card grabbedCard:draggedCards){
+            grabbedCard.getDropShadow().setRadius(20);
+            grabbedCard.getDropShadow().setOffsetX(10);
+            grabbedCard.getDropShadow().setOffsetY(10);
 
-        card.toFront();
-        card.setTranslateX(offsetX);
-        card.setTranslateY(offsetY);
+            grabbedCard.toFront();
+            grabbedCard.setTranslateX(offsetX);
+            grabbedCard.setTranslateY(offsetY);
+        }
     };
 
     private EventHandler<MouseEvent> onMouseReleasedHandler = e -> {
@@ -80,7 +96,6 @@ public class Game extends Pane {
             return;
         Card card = (Card) e.getSource();
         Pile pile = getValidIntersectingPile(card, tableauPiles);
-        //TODO
         if (pile != null) {
             handleValidMove(card, pile);
         } else {
@@ -205,7 +220,7 @@ public class Game extends Pane {
     public void dealCards() {
         //Iterator<Card> deckIterator = deck.iterator();
         //TODO
-        Collections.shuffle(deck);
+       Collections.shuffle(deck);
         for (int i = 0; i < deck.size(); i++) {
             Card card = deck.get(i);
             if(i == 0){
