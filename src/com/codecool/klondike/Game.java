@@ -119,14 +119,19 @@ public class Game extends Pane {
 
     public boolean isMoveValid(Card card, Pile destPile) {
         boolean isValidMove = false;
-        if (card.getRank() == (destPile.getTopCard().getRank()-1) ){
-            if (Card.isOppositeColor(card, destPile.getTopCard())){
-                isValidMove = true;
-                if(!card.getContainingPile().isEmpty() && !card.getContainingPile().getPileType().equals(Pile.PileType.DISCARD) && card.getContainingPile().getCards().size()-2 > -1){
-                    card.getContainingPile().getCards().get(card.getContainingPile().getCards().size()-2).flip();
+        if(destPile.getCards().size() != 0){
+            if (card.getRank() == (destPile.getTopCard().getRank()-1) ){
+                if (Card.isOppositeColor(card, destPile.getTopCard())){
+                    isValidMove = true;
                 }
             }
-
+        } else if (card.getRank() == 13){
+            isValidMove = true;
+        }
+        if (isValidMove) {
+            if(!card.getContainingPile().isEmpty() && !card.getContainingPile().getPileType().equals(Pile.PileType.DISCARD) && card.getContainingPile().getCards().size()-2 > -1){
+                card.getContainingPile().getCards().get(card.getContainingPile().getCards().size()-2).flip();
+            }
         }
         return isValidMove;
     }
