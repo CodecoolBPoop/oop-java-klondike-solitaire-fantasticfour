@@ -70,19 +70,16 @@ public class Game extends Pane {
                 idx = i;
         }
 
-        for (int i = idx; i < activePile.getCards().size(); i++) {
-            if(i<activePile.getCards().size()-1 && !activePile.getPileType().equals(Pile.PileType.DISCARD)){
-                Card card1 = activePile.getCards().get(i);
-                Card card2 = activePile.getCards().get(i+1);
-                if(Card.isOppositeColor(card1,card2)&&Card.rankCheck(card1,card2)){
-                    draggedCards.add(card1);
+        for (int i = 0; i < activePile.getCards().size(); i++) {
+            if(!activePile.getPileType().equals(Pile.PileType.DISCARD)){
+                if(!activePile.getCards().get(i).isFaceDown()){
+                    draggedCards.add(activePile.getCards().get(i));
                 }
-            } else if(!activePile.getPileType().equals(Pile.PileType.DISCARD)){
-                draggedCards.add(activePile.getCards().get(i));
             } else{
                 draggedCards.add(card);
             }
         }
+
 
         for (Card grabbedCard:draggedCards){
             grabbedCard.getDropShadow().setRadius(20);
@@ -100,11 +97,11 @@ public class Game extends Pane {
             return;
         Card card = (Card) e.getSource();
         Pile pile = getValidIntersectingPile(card, tableauPiles);
-        if (pile != null) {
+        if (pile != null && !pile.equals(card.getContainingPile())) {
             handleValidMove(card, pile);
         } else {
             draggedCards.forEach(MouseUtil::slideBack);
-            draggedCards = null;
+            draggedCards.clear();
         }
     };
 
