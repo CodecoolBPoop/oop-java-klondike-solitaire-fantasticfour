@@ -125,6 +125,7 @@ public class Game extends Pane {
     public Game() {
         deck = Card.createNewDeck();
         initPiles();
+        shuffleCards();
         dealCards();
     }
 
@@ -248,10 +249,14 @@ public class Game extends Pane {
         }
     }
 
+    public void shuffleCards() {
+        Collections.shuffle(deck);
+    }
+
     public void dealCards() {
+
         //Iterator<Card> deckIterator = deck.iterator();
         //TODO
-        Collections.shuffle(deck);
         for (int i = 0; i < deck.size(); i++) {
             Card card = deck.get(i);
             if(i == 0){
@@ -358,6 +363,7 @@ public class Game extends Pane {
         resetPiles();
         deck.clear();
         deck = Card.createNewDeck();
+        shuffleCards();
         dealCards();
     }
 
@@ -373,6 +379,13 @@ public class Game extends Pane {
     }
 
     private void finishGame() {
+        for (Card card: deck) {
+            getChildren().remove(card);
+        }
+        resetPiles();
+        deck.clear();
+        deck = Card.createNewDeck();
+        dealCards();
         int counter = 0;
         for (Card card: deck) {
             card.flip();
