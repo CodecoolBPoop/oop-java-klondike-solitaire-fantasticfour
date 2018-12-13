@@ -1,18 +1,17 @@
 package com.codecool.klondike;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.print.Collation;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
+import javafx.scene.control.Button;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,6 +37,10 @@ public class Game extends Pane {
 
     private EventHandler<MouseEvent> onMouseClickedHandler = e -> {
         Card card = (Card) e.getSource();
+        if(e.getClickCount() == 2){
+            moveCardToFoundation(card);
+            return;
+        }
         if (card.getContainingPile().getPileType() == Pile.PileType.STOCK) {
             card.moveToPile(discardPile);
             card.flip();
@@ -56,9 +59,12 @@ public class Game extends Pane {
     };
 
     private EventHandler<MouseEvent> onMouseDraggedHandler = e -> {
+        if(e.getClickCount() == 2) {
+            return;
+        }
         Card card = (Card) e.getSource();
         Pile activePile = card.getContainingPile();
-        if (activePile.getPileType() == Pile.PileType.STOCK || card.isFaceDown())
+        if (activePile.getPileType() == Pile.PileType.STOCK || activePile.getPileType() == Pile.PileType.FOUNDATION || card.isFaceDown())
             return;
         double offsetX = e.getSceneX() - dragStartX;
         double offsetY = e.getSceneY() - dragStartY;
@@ -150,6 +156,14 @@ public class Game extends Pane {
         }
         return isValidMove;
     }
+
+    public void flipCard(Card card) {
+        int previousCard = card.getContainingPile().getCards().size() - 2;
+        if (!card.getContainingPile().isEmpty() && !card.getContainingPile().getPileType().equals(Pile.PileType.DISCARD) && previousCard > -1) {
+            card.getContainingPile().getCards().get(previousCard).flip();
+        }
+    }
+
     private Pile getValidIntersectingPile(Card card, List<Pile> piles) {
         Pile result = card.getContainingPile();
         for (Pile pile : piles) {
@@ -219,7 +233,7 @@ public class Game extends Pane {
     public void dealCards() {
         //Iterator<Card> deckIterator = deck.iterator();
         //TODO
-       Collections.shuffle(deck);
+        Collections.shuffle(deck);
         for (int i = 0; i < deck.size(); i++) {
             Card card = deck.get(i);
             if(i == 0){
@@ -269,13 +283,13 @@ public class Game extends Pane {
                 if(i==27){
                     card.flip();
                 }
-            } else{
+            } else {
                 stockPile.addCard(card);
                 addMouseEventHandlers(card);
                 getChildren().add(card);
             }
         }
-        /** ASK THE MENTORS TOMORROW
+        /* ASK THE MENTORS TOMORROW
          * int iterationNumber = 0;
         deckIterator.forEachRemaining(card -> {
             stockPile.addCard(card);
@@ -293,4 +307,48 @@ public class Game extends Pane {
                 BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
     }
 
+    public void moveCardToFoundation(Card card) {
+        int rank = card.getRank();
+        int suit = card.getSuit();
+        int topCardRank;
+        try {
+            topCardRank = foundationPiles.get(suit-1).getTopCard().getRank();
+        } catch (NullPointerException e) {
+            topCardRank = 0;
+        }
+        if (topCardRank+1 == rank && !card.isFaceDown()) {
+            flipCard(card);
+            card.moveToPile(foundationPiles.get(suit-1));
+        }
+    }
+
+    public void addRestartButton() {
+        Button restartButton = new Button("restart");
+        HBox buttonBar = new HBox();
+        restartButton.setOnAction(actionEvent -> restartGame());
+        buttonBar.getChildren().add(restartButton);
+        getChildren().add(buttonBar);
+
+    }
+
+    private void restartGame() {
+        for (Card card: deck) {
+            getChildren().remove(card);
+        }
+        resetPiles();
+        deck.clear();
+        deck = Card.createNewDeck();
+        dealCards();
+    }
+
+    private void resetPiles () {
+        for (Pile pile: tableauPiles) {
+            pile.clear();
+        }
+        for (Pile pile: foundationPiles) {
+            pile.clear();
+        }
+        discardPile.clear();
+        stockPile.clear();
+    }
 }
