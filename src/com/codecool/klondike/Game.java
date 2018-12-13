@@ -37,80 +37,88 @@ public class Game extends Pane {
 
 
     private EventHandler<MouseEvent> onMouseClickedHandler = e -> {
-        Card card = (Card) e.getSource();
-        if(e.getClickCount() == 2){
-            moveCardToFoundation(card);
-            return;
-        }
-        if (card.getContainingPile().getPileType() == Pile.PileType.STOCK) {
-            if (card != card.getContainingPile().getTopCard()) return;
-            card.moveToPile(discardPile);
-            card.flip();
-            card.setMouseTransparent(false);
-            System.out.println("Placed " + card + " to the waste.");
+        if (e.getButton().toString().equals("PRIMARY")){
+            Card card = (Card) e.getSource();
+            if(e.getClickCount() == 2){
+                moveCardToFoundation(card);
+                return;
+            }
+            if (card.getContainingPile().getPileType() == Pile.PileType.STOCK) {
+                if (card != card.getContainingPile().getTopCard()) return;
+                card.moveToPile(discardPile);
+                card.flip();
+                card.setMouseTransparent(false);
+                System.out.println("Placed " + card + " to the waste.");
+            }
         }
     };
 
     private EventHandler<MouseEvent> stockReverseCardsHandler = e -> {
-        refillStockFromDiscard();
+        if (e.getButton().toString().equals("PRIMARY")) {
+            refillStockFromDiscard();
+        }
     };
 
     private EventHandler<MouseEvent> onMousePressedHandler = e -> {
-        dragStartX = e.getSceneX();
-        dragStartY = e.getSceneY();
+        if (e.getButton().toString().equals("PRIMARY")){
+            dragStartX = e.getSceneX();
+            dragStartY = e.getSceneY();
+        }
     };
 
     private EventHandler<MouseEvent> onMouseDraggedHandler = e -> {
-        if(e.getClickCount() == 2) {
-            return;
-        }
-        Card card = (Card) e.getSource();
-        Pile activePile = card.getContainingPile();
-        if (activePile.getPileType() == Pile.PileType.STOCK || card.isFaceDown() || (card != activePile.getTopCard() && activePile.getPileType() == Pile.PileType.DISCARD))
-            return;
-        double offsetX = e.getSceneX() - dragStartX;
-        double offsetY = e.getSceneY() - dragStartY;
-
-        draggedCards.clear();
-        int idx = activePile.getCards().size();
-        for (int i = 0; i < activePile.getCards().size(); i++) {
-            if (card.equals(activePile.getCards().get(i))) {
-                idx = i;
+        if (e.getButton().toString().equals("PRIMARY")){
+            if(e.getClickCount() == 2) {
+                return;
             }
-        }
+            Card card = (Card) e.getSource();
+            Pile activePile = card.getContainingPile();
+            if (activePile.getPileType() == Pile.PileType.STOCK || card.isFaceDown() || (card != activePile.getTopCard() && activePile.getPileType() == Pile.PileType.DISCARD))
+                return;
+            double offsetX = e.getSceneX() - dragStartX;
+            double offsetY = e.getSceneY() - dragStartY;
 
-        for (int i = idx; i < activePile.getCards().size(); i++) {
-            if(!activePile.getPileType().equals(Pile.PileType.DISCARD)){
-                if(!activePile.getCards().get(i).isFaceDown()){
-                    draggedCards.add(activePile.getCards().get(i));
+            draggedCards.clear();
+            int idx = activePile.getCards().size();
+            for (int i = 0; i < activePile.getCards().size(); i++) {
+                if (card.equals(activePile.getCards().get(i))) {
+                    idx = i;
                 }
-            } else{
-                draggedCards.add(card);
             }
-        }
 
+            for (int i = idx; i < activePile.getCards().size(); i++) {
+                if(!activePile.getPileType().equals(Pile.PileType.DISCARD)){
+                    if(!activePile.getCards().get(i).isFaceDown()){
+                        draggedCards.add(activePile.getCards().get(i));
+                    }
+                } else{
+                    draggedCards.add(card);
+                }
+            }
+            for (Card grabbedCard:draggedCards){
+                grabbedCard.getDropShadow().setRadius(20);
+                grabbedCard.getDropShadow().setOffsetX(10);
+                grabbedCard.getDropShadow().setOffsetY(10);
 
-        for (Card grabbedCard:draggedCards){
-            grabbedCard.getDropShadow().setRadius(20);
-            grabbedCard.getDropShadow().setOffsetX(10);
-            grabbedCard.getDropShadow().setOffsetY(10);
-
-            grabbedCard.toFront();
-            grabbedCard.setTranslateX(offsetX);
-            grabbedCard.setTranslateY(offsetY);
+                grabbedCard.toFront();
+                grabbedCard.setTranslateX(offsetX);
+                grabbedCard.setTranslateY(offsetY);
+            }
         }
     };
 
     private EventHandler<MouseEvent> onMouseReleasedHandler = e -> {
-        if (draggedCards.isEmpty())
-            return;
-        Card card = (Card) e.getSource();
-        Pile pile = getValidIntersectingPile(card, tableauPiles);
-        if (pile != null && !pile.equals(card.getContainingPile())) {
-            handleValidMove(card, pile);
-        } else {
-            draggedCards.forEach(MouseUtil::slideBack);
-            draggedCards.clear();
+        if (e.getButton().toString().equals("PRIMARY")) {
+            if (draggedCards.isEmpty())
+                return;
+            Card card = (Card) e.getSource();
+            Pile pile = getValidIntersectingPile(card, tableauPiles);
+            if (pile != null && !pile.equals(card.getContainingPile())) {
+                handleValidMove(card, pile);
+            } else {
+                draggedCards.forEach(MouseUtil::slideBack);
+                draggedCards.clear();
+            }
         }
     };
 
