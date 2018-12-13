@@ -93,7 +93,6 @@ public class Card extends ImageView {
         if(Arrays.asList(red).contains(card2Color) && Arrays.asList(black).contains(card1Color)) {
             oppositeColor = true;
         }
-        System.out.println(oppositeColor);
         return oppositeColor;
     }
 
@@ -110,6 +109,8 @@ public class Card extends ImageView {
         }
         return result;
     }
+
+    public static boolean rankCheck(Card card1,Card card2){return card1.getRank()-1==card2.getRank();}
 
     public static void loadCardImages() {
         cardBackImage = new Image("card_images/card_back.png");
