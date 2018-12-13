@@ -419,7 +419,7 @@ public class Game extends Pane {
 
         winAlert.setTitle("YOU WIN!");
         winAlert.setHeaderText("WON");
-        winAlert.setContentText("It took " + validMoveCounter +" steps to solve the game!" + " \nPress OK to restart!");
+        winAlert.setContentText("It took " + validMoveCounter +" steps to solve the game!");
 
         Optional<ButtonType> result = winAlert.showAndWait();
 
