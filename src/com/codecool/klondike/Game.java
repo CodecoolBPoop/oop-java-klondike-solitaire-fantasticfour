@@ -42,6 +42,7 @@ public class Game extends Pane {
             return;
         }
         if (card.getContainingPile().getPileType() == Pile.PileType.STOCK) {
+            if (card != card.getContainingPile().getTopCard()) return;
             card.moveToPile(discardPile);
             card.flip();
             card.setMouseTransparent(false);
