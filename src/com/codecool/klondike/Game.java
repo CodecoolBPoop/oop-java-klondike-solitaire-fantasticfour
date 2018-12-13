@@ -338,7 +338,7 @@ public class Game extends Pane {
     public void moveCardToFoundation(Card card) {
         int rank = card.getRank();
         int suit = card.getSuit();
-        finishGame();
+        //finishGame();
         int topCardRank;
         try {
             topCardRank = foundationPiles.get(suit-1).getTopCard().getRank();
