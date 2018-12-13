@@ -155,7 +155,10 @@ public class Game extends Pane {
         if (isValidMove) {
             if(card.getContainingPile().getCards().size() != draggedCards.size() && !card.getContainingPile().getPileType().equals(Pile.PileType.DISCARD) && previousCard > -1){
                 if(draggedCards.size()<2){
-                    card.getContainingPile().getCards().get(previousCard).flip();
+                    Card cardToFlip = card.getContainingPile().getCards().get(previousCard);
+                    if(cardToFlip.isFaceDown()){
+                        cardToFlip.flip();
+                    }
                 } else{
                     Card cardToFlip = card.getContainingPile().getCards().get(card.getContainingPile().getCards().size()-(draggedCards.size()+1));
                     if(cardToFlip.isFaceDown()){
