@@ -333,7 +333,7 @@ public class Game extends Pane {
     public void moveCardToFoundation(Card card) {
         int rank = card.getRank();
         int suit = card.getSuit();
-        // finishGame();
+        // finishGame(); // FOR TESTING - ACE COMPLETES THE GAME
         int topCardRank;
         try {
             topCardRank = foundationPiles.get(suit-1).getTopCard().getRank();
