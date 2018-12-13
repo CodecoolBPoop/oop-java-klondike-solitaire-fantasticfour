@@ -32,6 +32,8 @@ public class Game extends Pane {
     private static double FOUNDATION_GAP = 0;
     private static double TABLEAU_GAP = 30;
 
+    public int validMoveCounter = 0;
+
 
     private EventHandler<MouseEvent> onMouseClickedHandler = e -> {
         Card card = (Card) e.getSource();
@@ -152,10 +154,12 @@ public class Game extends Pane {
             if (card.getRank() == (destPile.getTopCard().getRank()-1) ){
                 if (Card.isOppositeColor(card, destPile.getTopCard())){
                     isValidMove = true;
+                    validMoveCounter += 1;
                 }
             }
         } else if (card.getRank() == 13){
             isValidMove = true;
+            validMoveCounter += 1;
         }
         if (isValidMove) {
             if(card.getContainingPile().getCards().size() != draggedCards.size() && !card.getContainingPile().getPileType().equals(Pile.PileType.DISCARD) && previousCard > -1){
