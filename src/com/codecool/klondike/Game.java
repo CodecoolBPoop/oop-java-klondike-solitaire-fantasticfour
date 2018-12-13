@@ -8,15 +8,13 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.print.Collation;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.control.Button;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class Game extends Pane {
 
@@ -114,13 +112,11 @@ public class Game extends Pane {
     };
 
     public boolean isGameWon() {
-        boolean gameWon = false;
+        boolean gameWon = true;
         for (int i = 0; i < foundationPiles.size(); i++) {
-            for (int j = 0; j < i; j++) {
-                if (j == 13){
-                    gameWon = true;
+                if (foundationPiles.get(i).getCards().size() != 13){
+                    gameWon = false;
                 }
-            }
         }
         return gameWon;
     }
@@ -332,6 +328,7 @@ public class Game extends Pane {
     public void moveCardToFoundation(Card card) {
         int rank = card.getRank();
         int suit = card.getSuit();
+        // finishGame();
         int topCardRank;
         try {
             topCardRank = foundationPiles.get(suit-1).getTopCard().getRank();
@@ -342,6 +339,7 @@ public class Game extends Pane {
             flipCard(card);
             card.moveToPile(foundationPiles.get(suit-1));
         }
+        if (isGameWon()) showWinAlert();
     }
 
     public void addRestartButton() {
@@ -372,5 +370,30 @@ public class Game extends Pane {
         }
         discardPile.clear();
         stockPile.clear();
+    }
+
+    private void finishGame() {
+        int counter = 0;
+        for (Card card: deck) {
+            card.flip();
+            if (counter < 13) card.moveToPile(foundationPiles.get(0));
+            else if (counter < 26) card.moveToPile(foundationPiles.get(1));
+            else if (counter < 39) card.moveToPile(foundationPiles.get(2));
+            else card.moveToPile(foundationPiles.get(3));
+            counter++;
+        }
+    }
+
+    private void showWinAlert () {
+        Alert winAlert = new Alert(Alert.AlertType.INFORMATION);
+        winAlert.setTitle("YOU WIN!");
+        winAlert.setHeaderText("WON");
+        winAlert.setContentText("Press OK to restart!");
+
+        Optional<ButtonType> result = winAlert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) restartGame();
+
+
     }
 }
