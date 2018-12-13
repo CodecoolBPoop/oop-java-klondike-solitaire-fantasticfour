@@ -1,6 +1,7 @@
 package com.codecool.klondike;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
@@ -337,7 +338,7 @@ public class Game extends Pane {
     public void moveCardToFoundation(Card card) {
         int rank = card.getRank();
         int suit = card.getSuit();
-        // finishGame();
+        finishGame();
         int topCardRank;
         try {
             topCardRank = foundationPiles.get(suit-1).getTopCard().getRank();
@@ -403,13 +404,19 @@ public class Game extends Pane {
 
     private void showWinAlert () {
         Alert winAlert = new Alert(Alert.AlertType.INFORMATION);
+        ButtonType buttonRestart = new ButtonType("Restart");
+        ButtonType buttonQuit = new ButtonType("Quit");
+
+        winAlert.getButtonTypes().setAll(buttonRestart, buttonQuit);
+
         winAlert.setTitle("YOU WIN!");
         winAlert.setHeaderText("WON");
-        winAlert.setContentText("Press OK to restart!");
+        winAlert.setContentText("It took " + validMoveCounter +" steps to solve the game!" + " \nPress OK to restart!");
 
         Optional<ButtonType> result = winAlert.showAndWait();
 
-        if (result.isPresent() && result.get() == ButtonType.OK) restartGame();
+        if (result.isPresent() && result.get() == buttonRestart) restartGame();
+        if (result.isPresent() && result.get() == buttonQuit) Platform.exit();
 
 
     }
