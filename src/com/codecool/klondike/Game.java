@@ -1,6 +1,7 @@
 package com.codecool.klondike;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
@@ -31,6 +32,8 @@ public class Game extends Pane {
     private static double STOCK_GAP = 1;
     private static double FOUNDATION_GAP = 0;
     private static double TABLEAU_GAP = 30;
+
+    public int validMoveCounter = 0;
 
 
     private EventHandler<MouseEvent> onMouseClickedHandler = e -> {
@@ -153,10 +156,12 @@ public class Game extends Pane {
             if (card.getRank() == (destPile.getTopCard().getRank()-1) ){
                 if (Card.isOppositeColor(card, destPile.getTopCard())){
                     isValidMove = true;
+                    validMoveCounter += 1;
                 }
             }
         } else if (card.getRank() == 13){
             isValidMove = true;
+            validMoveCounter += 1;
         }
         if (isValidMove) {
             if(card.getContainingPile().getCards().size() != draggedCards.size() && !card.getContainingPile().getPileType().equals(Pile.PileType.DISCARD) && previousCard > -1){
@@ -399,13 +404,19 @@ public class Game extends Pane {
 
     private void showWinAlert () {
         Alert winAlert = new Alert(Alert.AlertType.INFORMATION);
+        ButtonType buttonRestart = new ButtonType("Restart");
+        ButtonType buttonQuit = new ButtonType("Quit");
+
+        winAlert.getButtonTypes().setAll(buttonRestart, buttonQuit);
+
         winAlert.setTitle("YOU WIN!");
         winAlert.setHeaderText("WON");
-        winAlert.setContentText("Press OK to restart!");
+        winAlert.setContentText("It took " + validMoveCounter +" steps to solve the game!" + " \nPress OK to restart!");
 
         Optional<ButtonType> result = winAlert.showAndWait();
 
-        if (result.isPresent() && result.get() == ButtonType.OK) restartGame();
+        if (result.isPresent() && result.get() == buttonRestart) restartGame();
+        if (result.isPresent() && result.get() == buttonQuit) Platform.exit();
 
 
     }
