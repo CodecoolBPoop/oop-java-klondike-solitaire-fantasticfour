@@ -64,12 +64,6 @@ public class Game extends Pane {
         double offsetY = e.getSceneY() - dragStartY;
 
         draggedCards.clear();
-        int idx = activePile.getCards().size()-1;
-        for (int i = 0; i < activePile.getCards().size(); i++) {
-            if (card.equals(activePile.getCards().get(i)))
-                idx = i;
-        }
-
         for (int i = 0; i < activePile.getCards().size(); i++) {
             if(!activePile.getPileType().equals(Pile.PileType.DISCARD)){
                 if(!activePile.getCards().get(i).isFaceDown()){
@@ -146,8 +140,12 @@ public class Game extends Pane {
             isValidMove = true;
         }
         if (isValidMove) {
-            if(!card.getContainingPile().isEmpty() && !card.getContainingPile().getPileType().equals(Pile.PileType.DISCARD) && previousCard > -1){
-                card.getContainingPile().getCards().get(previousCard).flip();
+            if(card.getContainingPile().getCards().size() != draggedCards.size() && !card.getContainingPile().getPileType().equals(Pile.PileType.DISCARD) && previousCard > -1){
+                if(draggedCards.size()<2){
+                    card.getContainingPile().getCards().get(previousCard).flip();
+                } else{
+                    card.getContainingPile().getCards().get(card.getContainingPile().getCards().size()-(draggedCards.size()+1)).flip();
+                }
             }
         }
         return isValidMove;
