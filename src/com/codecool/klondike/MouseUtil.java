@@ -37,7 +37,6 @@ public class MouseUtil {
         double destCardGap = destPile.getCardGap();
         double targetX;
         double targetY;
-
         if (destPile.isEmpty()) {
             targetX = destPile.getLayoutX();
             targetY = destPile.getLayoutY();
@@ -45,7 +44,6 @@ public class MouseUtil {
             targetX = destPile.getTopCard().getLayoutX();
             targetY = destPile.getTopCard().getLayoutY();
         }
-
         for (int i = 0; i < cardsToSlide.size(); i++) {
             Card currentCard = cardsToSlide.get(i);
             double sourceX = currentCard.getLayoutX() + currentCard.getTranslateX();

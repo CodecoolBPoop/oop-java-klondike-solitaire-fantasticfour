@@ -78,8 +78,22 @@ public class Card extends ImageView {
     }
 
     public static boolean isOppositeColor(Card card1, Card card2) {
-        //TODO
-        return true;
+        boolean oppositeColor = false;
+        Integer[] red = {1, 2};
+        Integer[] black = {3, 4};
+        Integer card1Color = 0;
+        Integer card2Color = 0;
+
+        card1Color = card1.getSuit();
+        card2Color = card2.getSuit();
+
+        if (Arrays.asList(red).contains(card1Color) && Arrays.asList(black).contains(card2Color)){
+            oppositeColor = true;
+    }
+        if(Arrays.asList(red).contains(card2Color) && Arrays.asList(black).contains(card1Color)) {
+            oppositeColor = true;
+        }
+        return oppositeColor;
     }
 
     public static boolean isSameSuit(Card card1, Card card2) {
@@ -95,6 +109,8 @@ public class Card extends ImageView {
         }
         return result;
     }
+
+    public static boolean rankCheck(Card card1,Card card2){return card1.getRank()-1==card2.getRank();}
 
     public static void loadCardImages() {
         cardBackImage = new Image("card_images/card_back.png");

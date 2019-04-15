@@ -49,7 +49,7 @@ public class Pile extends Pane {
     }
 
     public void clear() {
-        //TODO
+        cards.clear();
     }
 
     public void addCard(Card card) {
@@ -76,9 +76,9 @@ public class Pile extends Pane {
 
     public void setBlurredBackground() {
         setPrefSize(Card.WIDTH, Card.HEIGHT);
-        BackgroundFill backgroundFill = new BackgroundFill(Color.gray(0.0, 0.2), null, null);
+        BackgroundFill backgroundFill = new BackgroundFill(Color.rgb(1,1,1,0.75), null, null);
         Background background = new Background(backgroundFill);
-        GaussianBlur gaussianBlur = new GaussianBlur(10);
+        GaussianBlur gaussianBlur = new GaussianBlur(0);
         setBackground(background);
         setEffect(gaussianBlur);
     }
